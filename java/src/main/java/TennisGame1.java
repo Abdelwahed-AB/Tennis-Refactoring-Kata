@@ -22,28 +22,13 @@ public class TennisGame1 implements TennisGame {
     }
 
     public String getScore() {
-        String score = "";
 
         if (m_score1 == m_score2) {
-            score = switch (m_score1) {
-                case 0 -> "Love-All";
-                case 1 -> "Fifteen-All";
-                case 2 -> "Thirty-All";
-                default -> "Deuce";
-            };
-
-            return score;
+            return getScoreTie();
         }
 
         if (m_score1 >= 4 || m_score2 >= 4) {
-            int scoreDelta = m_score1 - m_score2;
-
-            if (scoreDelta == 1) score = "Advantage player1";
-            else if (scoreDelta == -1) score = "Advantage player2";
-            else if (scoreDelta >= 2) score = "Win for player1";
-            else score = "Win for player2";
-
-            return score;
+            return getScoreUnbalanced();
         }
 
         String scoreStr = Stream.of(m_score1, m_score2)
@@ -55,5 +40,28 @@ public class TennisGame1 implements TennisGame {
                 }).collect(Collectors.joining("-"));
 
         return scoreStr;
+    }
+
+    public String getScoreTie(){
+        String score = switch (m_score1) {
+            case 0 -> "Love-All";
+            case 1 -> "Fifteen-All";
+            case 2 -> "Thirty-All";
+            default -> "Deuce";
+        };
+
+        return score;
+    }
+
+    public String getScoreUnbalanced(){
+        String score = "";
+        int scoreDelta = m_score1 - m_score2;
+
+        if (scoreDelta == 1) score = "Advantage " + player1Name ;
+        else if (scoreDelta == -1) score = "Advantage " + player2Name;
+        else if (scoreDelta >= 2) score = "Win for " + player1Name;
+        else score = "Win for " + player2Name;
+
+        return score;
     }
 }
