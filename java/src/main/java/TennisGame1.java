@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TennisGame1 implements TennisGame {
 
@@ -45,28 +48,26 @@ public class TennisGame1 implements TennisGame {
         }
 
         int tempScore = m_score1;
-        for (int i = 1; i < 3; i++) {
-            if(i > 1) {
-                score += "-";
-            }
+        List<String> scoreStrs = new ArrayList<>();
 
+        for (int i = 1; i < 3; i++) {
             switch (tempScore) {
                 case 0:
-                    score += "Love";
+                    scoreStrs.add("Love");
                     break;
                 case 1:
-                    score += "Fifteen";
+                    scoreStrs.add("Fifteen");
                     break;
                 case 2:
-                    score += "Thirty";
+                    scoreStrs.add("Thirty");
                     break;
                 case 3:
-                    score += "Forty";
+                    scoreStrs.add("Forty");
                     break;
             }
 
             tempScore = m_score2;
         }
-        return score;
+        return String.join("-", scoreStrs);
     }
 }
