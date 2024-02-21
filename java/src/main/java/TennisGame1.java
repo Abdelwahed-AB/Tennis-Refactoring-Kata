@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TennisGame1 implements TennisGame {
 
@@ -17,7 +18,7 @@ public class TennisGame1 implements TennisGame {
     public void wonPoint(String playerName) {
         if (playerName.equals(player1Name)) {
             m_score1 += 1;
-        } else if(playerName.equals(player2Name)) {
+        } else if (playerName.equals(player2Name)) {
             m_score2 += 1;
         }
     }
@@ -47,27 +48,14 @@ public class TennisGame1 implements TennisGame {
             return score;
         }
 
-        int tempScore = m_score1;
-        List<String> scoreStrs = new ArrayList<>();
+        String scoreStr = Stream.of(m_score1, m_score2)
+                .map(item -> switch (item) {
+                    case 0 -> "Love";
+                    case 1 -> "Fifteen";
+                    case 2 -> "Thirty";
+                    default -> "Forty";
+                }).collect(Collectors.joining("-"));
 
-        for (int i = 1; i < 3; i++) {
-            switch (tempScore) {
-                case 0:
-                    scoreStrs.add("Love");
-                    break;
-                case 1:
-                    scoreStrs.add("Fifteen");
-                    break;
-                case 2:
-                    scoreStrs.add("Thirty");
-                    break;
-                case 3:
-                    scoreStrs.add("Forty");
-                    break;
-            }
-
-            tempScore = m_score2;
-        }
-        return String.join("-", scoreStrs);
+        return scoreStr;
     }
 }
