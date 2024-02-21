@@ -2,10 +2,12 @@ public class TennisGame2 implements TennisGame {
     public int p1Point = 0;
     public int p2Point = 0;
 
-    public String p1Res = "";
-    public String p2Res = "";
     private final String player1Name;
     private final String player2Name;
+
+    private final int FOUR = 4;
+    private final int THREE = 3;
+    private final int MATCH_END_DELTA = 2;
 
     public TennisGame2(String player1Name, String player2Name) {
         this.player1Name = player1Name;
@@ -30,20 +32,20 @@ public class TennisGame2 implements TennisGame {
     public String getScore() {
 
         if (p1Point == p2Point) { //Tie
-            if (p1Point < 3)
+            if (p1Point < THREE)
                 return getScoreRepresentation(p1Point) + "-All";
             return "Deuce";
         }
 
         // midgame
-        if (p2Point < 4 && p1Point < 4) {
+        if (p2Point < FOUR && p1Point < FOUR) {
             return getScoreRepresentation(p1Point) + "-" + getScoreRepresentation(p2Point);
         }
 
         //endgame (delta >= 2)
         int scoreDelta = p1Point - p2Point;
 
-        if(Math.abs(scoreDelta) >= 2){
+        if(Math.abs(scoreDelta) >= MATCH_END_DELTA){
             return "Win for " + getLeaderName();
         }
 

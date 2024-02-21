@@ -1,36 +1,50 @@
 
 public class TennisGame3 implements TennisGame {
-    
-    private int p2;
-    private int p1;
-    private String p1N;
-    private String p2N;
 
-    public TennisGame3(String p1N, String p2N) {
-        this.p1N = p1N;
-        this.p2N = p2N;
+    private int p2Score;
+    private int p1Score;
+    private String p1Name;
+    private String p2Name;
+
+    private final int FOUR = 4;
+    private final int THREE = 3;
+    private final int MATCH_END_DELTA = 2;
+
+
+    public TennisGame3(String p1Name, String p2Name) {
+        this.p1Name = p1Name;
+        this.p2Name = p2Name;
     }
 
     public String getScore() {
-        String s;
-        if (p1 < 4 && p2 < 4 && !(p1 + p2 == 6)) {
-            String[] p = new String[]{"Love", "Fifteen", "Thirty", "Forty"}; 
-            s = p[p1];
-            return (p1 == p2) ? s + "-All" : s + "-" + p[p2];
+        if (p1Score < FOUR && p2Score < FOUR && p1Score + p2Score != THREE*2) {
+            String[] scoreRepresentations = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
+
+            if (p1Score == p2Score) {
+                return scoreRepresentations[p1Score] + "-All";
+            } else {
+                return scoreRepresentations[p1Score] + "-" + scoreRepresentations[p2Score];
+            }
         } else {
-            if (p1 == p2)
+            if (p1Score == p2Score) {
                 return "Deuce";
-            s = p1 > p2 ? p1N : p2N;
-            return ((p1-p2)*(p1-p2) == 1) ? "Advantage " + s : "Win for " + s;
+            }
+            String leaderName = p1Score > p2Score ? p1Name : p2Name;
+
+            int scoreDelta = p1Score - p2Score;
+            if(Math.abs(scoreDelta) >= MATCH_END_DELTA){
+                return "Win for " + leaderName;
+            }else{
+                return "Advantage " + leaderName;
+            }
         }
     }
-    
-    public void wonPoint(String playerName) {
-        if (playerName == "player1")
-            this.p1 += 1;
-        else
-            this.p2 += 1;
-        
-    }
 
+    public void wonPoint(String playerName) {
+        if (playerName.equals(p1Name)) {
+            this.p1Score += 1;
+        } else if (playerName.equals(p2Name)) {
+            this.p2Score += 1;
+        }
+    }
 }
