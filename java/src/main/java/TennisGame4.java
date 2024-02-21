@@ -20,12 +20,14 @@ public class TennisGame4 implements TennisGame {
 
     @java.lang.Override
     public String getScore() {
-        TennisResult result = new Deuce(
-                this, new GameServer(
-                        this, new GameReceiver(
-                                this, new AdvantageServer(
-                                        this, new AdvantageReceiver(
-                                                this, new DefaultResult(this)))))).getResult();
+        DefaultResult defaultResult = new DefaultResult(this);
+        AdvantageReceiver advantageReceiver = new AdvantageReceiver(this, defaultResult);
+        AdvantageServer advantageServer = new AdvantageServer(this, advantageReceiver);
+        GameReceiver gameReceiver = new GameReceiver(this, advantageServer);
+        GameServer gameServer = new GameServer(this, gameReceiver);
+
+        Deuce deuce = new Deuce(this, gameServer);
+        TennisResult result = deuce.getResult();
         return result.format();
     }
 
@@ -60,7 +62,7 @@ class TennisResult {
     }
 
     String format() {
-        if ("".equals(this.receiverScore))
+        if (this.receiverScore.isEmpty())
             return this.serverScore;
         if (serverScore.equals(receiverScore))
             return serverScore + "-All";
