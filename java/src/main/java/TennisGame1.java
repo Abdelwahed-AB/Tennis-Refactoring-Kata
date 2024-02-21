@@ -54,7 +54,7 @@ public class TennisGame1 implements TennisGame {
     }
 
     public String getScoreUnbalanced(){
-        String score = "";
+        String score;
         int scoreDelta = m_score1 - m_score2;
 
         if (scoreDelta == 1) score = "Advantage " + player1Name ;
