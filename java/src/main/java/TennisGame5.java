@@ -8,6 +8,8 @@ public class TennisGame5 implements TennisGame {
     private int player1Score;
     private int player2Score;
 
+    private final float MATCH_END_DELTA = 2;
+
     public TennisGame5(String player1Name, String player2Name) {
         this.player1Name = player1Name;
         this.player2Name = player2Name;
@@ -15,9 +17,9 @@ public class TennisGame5 implements TennisGame {
 
     @Override
     public void wonPoint(String playerName) {
-        if (playerName.equals("player1"))
+        if (playerName.equals(player1Name))
             player1Score++;
-        else if (playerName.equals("player2"))
+        else if (playerName.equals(player2Name))
             player2Score++;
         else
             throw new IllegalArgumentException("Invalid player name.");
@@ -25,46 +27,54 @@ public class TennisGame5 implements TennisGame {
 
     @Override
     public String getScore() {
-        int p1 = player1Score;
-        int p2 = player2Score;
-
-        while (p1 > 4 || p2 > 4) {
-            p1--;
-            p2--;
+        if (player1Score > 4 || player2Score > 4) {
+            player1Score--;
+            player2Score--;
         }
 
-        var lookup = new HashMap<Map.Entry, String>();
-        lookup.put(Map.entry(0, 0), "Love-All");
-        lookup.put(Map.entry(0, 1), "Love-Fifteen");
-        lookup.put(Map.entry(0, 2), "Love-Thirty");
-        lookup.put(Map.entry(0, 3), "Love-Forty");
-        lookup.put(Map.entry(0, 4), "Win for player2");
-        lookup.put(Map.entry(1, 0), "Fifteen-Love");
-        lookup.put(Map.entry(1, 1), "Fifteen-All");
-        lookup.put(Map.entry(1, 2), "Fifteen-Thirty");
-        lookup.put(Map.entry(1, 3), "Fifteen-Forty");
-        lookup.put(Map.entry(1, 4), "Win for player2");
-        lookup.put(Map.entry(2, 0), "Thirty-Love");
-        lookup.put(Map.entry(2, 1), "Thirty-Fifteen");
-        lookup.put(Map.entry(2, 2), "Thirty-All");
-        lookup.put(Map.entry(2, 3), "Thirty-Forty");
-        lookup.put(Map.entry(2, 4), "Win for player2");
-        lookup.put(Map.entry(3, 0), "Forty-Love");
-        lookup.put(Map.entry(3, 1), "Forty-Fifteen");
-        lookup.put(Map.entry(3, 2), "Forty-Thirty");
-        lookup.put(Map.entry(3, 3), "Deuce");
-        lookup.put(Map.entry(3, 4), "Advantage player2");
-        lookup.put(Map.entry(4, 0), "Win for player1");
-        lookup.put(Map.entry(4, 1), "Win for player1");
-        lookup.put(Map.entry(4, 2), "Win for player1");
-        lookup.put(Map.entry(4, 3), "Advantage player1");
-        lookup.put(Map.entry(4, 4), "Deuce");
+        return getScoreStr();
+    }
 
-        var entry = Map.entry(p1, p2);
-        if (lookup.containsKey(entry)) {
-            return lookup.get(entry);
-        } else {
+    private String getScoreStr(){
+        if(player1Score < 0 || player2Score < 0){
             throw new IllegalArgumentException("Invalid score.");
+        }
+
+        int scoreDelta = player1Score - player2Score;
+        if(player1Score <= 3 && player2Score <= 3){
+            if(scoreDelta == 0) {
+                if (player1Score == 3)
+                    return "Deuce";
+                return getScoreRepresentation(player2Score) + "-All";
+            }
+
+            return getScoreRepresentation(player1Score) + "-" + getScoreRepresentation(player2Score);
+        }else{
+            if(scoreDelta == 0)
+                return "Deuce";
+            if (scoreDelta >= MATCH_END_DELTA)
+                return "Win for " + player1Name;
+            if (scoreDelta <= -MATCH_END_DELTA)
+                return "Win for " + player2Name;
+            if (scoreDelta == 1)
+                return "Advantage " + player1Name;
+            if (scoreDelta == -1)
+                return "Advantage " + player2Name;
+        }
+
+        return "";
+    }
+
+    public String getScoreRepresentation(int score) {
+        switch (score) {
+            case 0:
+                return "Love";
+            case 1:
+                return "Fifteen";
+            case 2:
+                return "Thirty";
+            default:
+                return "Forty";
         }
     }
 }
