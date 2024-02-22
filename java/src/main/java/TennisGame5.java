@@ -28,8 +28,9 @@ public class TennisGame5 implements TennisGame {
     @Override
     public String getScore() {
         if (player1Score > 4 || player2Score > 4) {
-            player1Score--;
-            player2Score--;
+            int maxScore = Math.max(player1Score, player2Score);
+            player1Score = player1Score - (maxScore - 4);
+            player2Score = player2Score - (maxScore - 4);
         }
 
         return getScoreStr();
