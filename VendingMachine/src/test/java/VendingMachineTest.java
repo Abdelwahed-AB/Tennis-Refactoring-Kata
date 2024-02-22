@@ -23,4 +23,18 @@ public class VendingMachineTest {
 
         Assertions.assertEquals("Invalid coin", exception.getMessage());
     }
+
+    @Test
+    @DisplayName("Should allow user to select products based on their id")
+    public void should_allow_user_to_select_products_based_on_id(){
+        int productId = ProductsEnum.WATER.id;
+        Assertions.assertDoesNotThrow(()->vendingMachine.selectProduct(productId));
+    }
+
+    @Test
+    @DisplayName("Should throw when passed an invalid product id")
+    public void should_throw_when_passed_invalid_product_id(){
+        int invalidProductId = 99999;
+        Assertions.assertThrows(RuntimeException.class, ()->vendingMachine.selectProduct(invalidProductId));
+    }
 }
